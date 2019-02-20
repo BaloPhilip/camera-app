@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Camera App",
+    "version": "0.1.0",
+    "slug": "camera-app",
+    "sdkVersion": "31.0.0",
+    "ios": {
+      "bundleIdentifier": "com.cameraApp"
+    },
+    "android": {
+      "package": "com.cameraApp"
+    }
+  }
+}
