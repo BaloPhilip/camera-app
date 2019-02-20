@@ -1,12 +1,12 @@
 import * as React from "react";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
-import { Main, Scanner } from "./screens";
+import { Main, Camera } from "./screens";
 
 const AppNavigator = createStackNavigator(
   {
     Main: { screen: Main },
-    Scanner: { screen: Scanner }
+    Camera: { screen: Camera }
   },
   {
     initialRouteName: "Main"

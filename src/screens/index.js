@@ -1,2 +1,2 @@
 export { default as Main } from "./Main";
-export { default as Scanner } from "./Scanner";
+export { default as Camera } from "./Camera";
