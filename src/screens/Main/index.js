@@ -1,17 +1,20 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const Main = ({ navigation }) => {
   const data = navigation.getParam("data", null);
 
   return (
     <View style={styles.container}>
-      <Button
-        onPress={() => navigation.navigate("Camera")}
-        title="Open camera"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      />
+      <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Camera")}
+          style={{ alignSelf: "center" }}
+        >
+          <Ionicons name="md-camera" size={70} color="black" />
+        </TouchableOpacity>
+      </View>
       {data && (
         <View style={styles.content}>
           <Text>{data}</Text>
