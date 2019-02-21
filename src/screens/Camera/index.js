@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet
+} from "react-native";
 import { Camera as CameraExpo, Permissions, BarCodeScanner } from "expo";
 
 export default class Camera extends React.Component {
@@ -11,28 +17,18 @@ export default class Camera extends React.Component {
 
   componentDidMount() {
     this.requestCameraPermission();
-    Dimensions.addEventListener("change", e => {
-      const {
-        screen: { height, width }
-      } = e;
-      this.handleEventDimensions(height, width);
-    });
+    Dimensions.addEventListener("change", this.handleEventDimensions);
     const { height, width } = Dimensions.get("screen");
-
-    this.handleEventDimensions(height, width);
+    this.setState({ isPortrait: height > width });
   }
-
-  handleEventDimensions = (height, width) => {
-    this.setState({
-      isPortrait: height > width
-    });
-  };
 
   componentWillUnmount() {
-    Dimensions.removeEventListener("change", e => {
-      this.handleEventDimensions;
-    });
+    Dimensions.removeEventListener("change", this.handleEventDimensions);
   }
+
+  handleEventDimensions = ({ screen: { height, width } }) => {
+    this.setState({ isPortrait: height > width });
+  };
 
   requestCameraPermission = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -42,7 +38,6 @@ export default class Camera extends React.Component {
   };
 
   handleBarCodeRead = ({ data }) => {
-    // console.log("1111111 --->", 1111111);
     const {
       navigation: { navigate }
     } = this.props;
@@ -50,58 +45,30 @@ export default class Camera extends React.Component {
   };
 
   render() {
-    const { hasCameraPermission } = this.state;
+    const { hasCameraPermission, isPortrait } = this.state;
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
     } else {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
           <CameraExpo
-            style={{ flex: 1 }}
+            style={styles.camera}
             type={this.state.type}
             barCodeScannerSettings={{
               barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
             }}
-            onBarCodeScanned={this.handleBarCodeRead}
+            onBarCodeScanned={!isPortrait ? this.handleBarCodeRead : null}
           >
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "transparent",
-                flexDirection: "row"
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  alignSelf: "flex-end",
-                  alignItems: "center"
-                }}
-                onPress={() => {
-                  this.setState({
-                    type:
-                      this.state.type === CameraExpo.Constants.Type.back
-                        ? CameraExpo.Constants.Type.front
-                        : CameraExpo.Constants.Type.back
-                  });
-                }}
-              >
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: "white" }}
-                >
-                  {" "}
-                  TEST{" "}
-                </Text>
-                {this.state.isPortrait && (
-                  <Text
-                    style={{ fontSize: 18, marginBottom: 10, color: "white" }}
-                  >
-                    isPortrait
+            <View style={styles.notificationWrapper}>
+              {isPortrait && (
+                <View style={styles.notificationBody}>
+                  <Text style={styles.notifacationText}>
+                    Please rotate device into landscape orientation
                   </Text>
-                )}
-              </TouchableOpacity>
+                </View>
+              )}
             </View>
           </CameraExpo>
         </View>
@@ -109,3 +76,27 @@ export default class Camera extends React.Component {
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  camera: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  notificationWrapper: {
+    flex: 0.2,
+    backgroundColor: "transparent"
+  },
+  notificationBody: {
+    backgroundColor: "rgba(128, 128, 128, .6)",
+    padding: 10
+  },
+  notifacationText: {
+    fontSize: 18,
+    color: "white",
+    textAlign: "center"
+  }
+});
