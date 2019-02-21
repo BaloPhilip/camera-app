@@ -17,8 +17,8 @@ import {
 export default class Camera extends React.Component {
   state = {
     hasCameraPermission: null,
-    type: CameraExpo.Constants.Type.back,
-    isPortrait: true
+    isPortrait: true,
+    isPhoto: true
   };
 
   componentDidMount() {
@@ -26,10 +26,6 @@ export default class Camera extends React.Component {
     Dimensions.addEventListener("change", this.handleEventDimensions);
     const { height, width } = Dimensions.get("screen");
     this.setState({ isPortrait: height > width });
-  }
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener("change", this.handleEventDimensions);
   }
 
   handleEventDimensions = ({ screen: { height, width } }) => {
@@ -58,12 +54,24 @@ export default class Camera extends React.Component {
   };
 
   saveToGallery = async photo => {
+    const {
+      navigation: { navigate }
+    } = this.props;
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
     if (status !== "granted") {
-      throw new Error("Denied CAMERA_ROLL permissions!");
+      alert("Denied CAMERA_ROLL permissions!");
+    } else {
+      try {
+        this.setState({ isPhoto: false });
+        await MediaLibrary.createAssetAsync(photo.uri);
+        navigate("Photo", { photo });
+        this.setState({ isPhoto: true });
+      } catch (e) {
+        console.log("error", e);
+        this.setState({ isPhoto: true });
+      }
     }
-    await MediaLibrary.createAssetAsync(photo.uri);
   };
 
   renderBottomBar = () => (
@@ -78,7 +86,7 @@ export default class Camera extends React.Component {
   );
 
   render() {
-    const { hasCameraPermission, isPortrait } = this.state;
+    const { hasCameraPermission, isPortrait, isPhoto } = this.state;
     if (hasCameraPermission === null) {
       return <View />;
     } else if (hasCameraPermission === false) {
@@ -94,7 +102,7 @@ export default class Camera extends React.Component {
               styles.camera,
               { justifyContent: isPortrait ? "center" : "space-between" }
             ]}
-            type={this.state.type}
+            type={CameraExpo.Constants.Type.back}
             barCodeScannerSettings={{
               barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
             }}
@@ -115,7 +123,7 @@ export default class Camera extends React.Component {
                 { paddingBottom: !this.state.isPortrait ? 50 : 5 }
               ]}
             >
-              {!isPortrait && this.renderBottomBar()}
+              {!isPortrait && isPhoto && this.renderBottomBar()}
             </View>
           </CameraExpo>
         </View>
@@ -130,7 +138,6 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1
-    // justifyContent: "space-between"
   },
   notificationWrapper: {
     flex: 0.2,
@@ -147,15 +154,12 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     backgroundColor: "transparent",
-    alignSelf: "center",
-    justifyContent: "space-between",
-    flex: 0.12,
-    flexDirection: "row"
-  },
-  bottomButton: {
-    flex: 0.3,
-    height: 58,
-    justifyContent: "center",
-    alignItems: "center"
+    // alignSelf: "center",
+    // justifyContent: "space-between",
+    // flex: 0.12,
+    // flexDirection: "row"
+    position: "absolute",
+    right: 0,
+    top: "50%"
   }
 });

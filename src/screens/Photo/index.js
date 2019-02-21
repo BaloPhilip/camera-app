@@ -1,102 +1,111 @@
 import React from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet
-} from "react-native";
-import { Camera as CameraExpo, Permissions, BarCodeScanner } from "expo";
+import { TouchableOpacity, View, Image, StyleSheet } from "react-native";
+import { ImageManipulator, MediaLibrary, Constants } from "expo";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-export default class Camera extends React.Component {
+export default class ImageManipulatorSample extends React.Component {
   state = {
-    hasCameraPermission: null,
-    type: CameraExpo.Constants.Type.back,
-    isPortrait: true
+    ready: false,
+    image: null
   };
 
   componentDidMount() {
-    this.requestCameraPermission();
-    Dimensions.addEventListener("change", this.handleEventDimensions);
-    const { height, width } = Dimensions.get("screen");
-    this.setState({ isPortrait: height > width });
-  }
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener("change", this.handleEventDimensions);
-  }
-
-  handleEventDimensions = ({ screen: { height, width } }) => {
-    this.setState({ isPortrait: height > width });
-  };
-
-  requestCameraPermission = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    const image = this.props.navigation.getParam("photo", null);
     this.setState({
-      hasCameraPermission: status === "granted"
+      ready: true,
+      image
     });
+  }
+
+  rotate = async degree => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      this.state.image.localUri || this.state.image.uri,
+      [{ rotate: degree }],
+      { format: "jpeg" }
+    );
+    this.setState({ image: manipResult });
   };
 
-  handleBarCodeRead = ({ data }) => {
-    const {
-      navigation: { navigate }
-    } = this.props;
-    navigate("Main", { data });
+  flip = async () => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      this.state.image.localUri || this.state.image.uri,
+      [{ flip: { horizontal: true } }],
+      { format: "jpeg" }
+    );
+    this.setState({ image: manipResult });
   };
+
+  save = async () => {
+    const { image } = this.state;
+    try {
+      await MediaLibrary.createAssetAsync(image.uri);
+      alert("Successfully saved photos to user's gallery!");
+    } catch (e) {
+      alert("No photos to save!");
+      console.log("ERROR", e);
+    }
+  };
+
+  renderImage = () => {
+    return (
+      <View
+        style={{
+          flex: 1
+        }}
+      >
+        <Image
+          source={{ uri: this.state.image.localUri || this.state.image.uri }}
+          style={{ flex: 1, resizeMode: "contain" }}
+        />
+      </View>
+    );
+  };
+
+  renderBottomBar = () => (
+    <View
+      style={{
+        flex: 0.2,
+        backgroundColor: "transparent",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        paddingTop: Constants.statusBarHeight / 2
+      }}
+    >
+      <TouchableOpacity onPress={() => this.rotate(90)} style={styles.button}>
+        <MaterialIcons name="rotate-right" size={50} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => this.rotate(-90)} style={styles.button}>
+        <MaterialIcons name="rotate-left" size={50} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={this.flip} style={styles.button}>
+        <MaterialIcons name="flip" size={50} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={this.save} style={styles.button}>
+        <MaterialIcons name="save" size={50} color="black" />
+      </TouchableOpacity>
+    </View>
+  );
 
   render() {
-    const { hasCameraPermission, isPortrait } = this.state;
-    if (hasCameraPermission === null) {
-      return <View />;
-    } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
-    } else {
-      return (
-        <View style={styles.container}>
-          <CameraExpo
-            style={styles.camera}
-            type={this.state.type}
-            barCodeScannerSettings={{
-              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-            }}
-            onBarCodeScanned={!isPortrait ? this.handleBarCodeRead : null}
-          >
-            <View style={styles.notificationWrapper}>
-              {isPortrait && (
-                <View style={styles.notificationBody}>
-                  <Text style={styles.notifacationText}>
-                    Please rotate device into landscape orientation
-                  </Text>
-                </View>
-              )}
-            </View>
-          </CameraExpo>
-        </View>
-      );
-    }
+    return (
+      <View
+        style={{
+          flex: 1,
+          padding: 10
+        }}
+      >
+        {this.state.ready && this.renderImage()}
+        {this.renderBottomBar()}
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  camera: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  notificationWrapper: {
-    flex: 0.2,
-    backgroundColor: "transparent"
-  },
-  notificationBody: {
-    backgroundColor: "rgba(128, 128, 128, .6)",
-    padding: 10
-  },
-  notifacationText: {
-    fontSize: 18,
-    color: "white",
-    textAlign: "center"
+  button: {
+    flex: 0.25,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });

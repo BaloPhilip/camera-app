@@ -22,8 +22,7 @@ class AwakeInDevApp extends React.Component {
     return (
       <View
         style={{
-          flex: 1,
-          marginTop: Expo.Constants.statusBarHeight
+          flex: 1
         }}
       >
         <App {...this.props} />
