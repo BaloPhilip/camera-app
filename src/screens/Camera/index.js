@@ -28,6 +28,10 @@ export default class Camera extends React.Component {
     this.setState({ isPortrait: height > width });
   }
 
+  componentWillUnmount() {
+    Dimensions.removeEventListener("change", this.handleEventDimensions);
+  }
+
   handleEventDimensions = ({ screen: { height, width } }) => {
     this.setState({ isPortrait: height > width });
   };
