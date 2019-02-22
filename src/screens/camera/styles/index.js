@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "rgba(128, 128, 128, .6)",
     padding: 10
   },
-  notifacationText: {
+  notificationText: {
     fontSize: 18,
     color: "white",
     textAlign: "center"

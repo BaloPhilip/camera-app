@@ -111,7 +111,7 @@ export default class Camera extends React.Component {
             <View style={styles.notificationWrapper}>
               {isPortrait && (
                 <View style={styles.notificationBody}>
-                  <Text style={styles.notifacationText}>
+                  <Text style={styles.notificationText}>
                     Please rotate device into landscape orientation
                   </Text>
                 </View>
@@ -120,7 +120,7 @@ export default class Camera extends React.Component {
             <View
               style={[
                 styles.bottomBar,
-                { paddingBottom: !this.state.isPortrait ? 50 : 5 }
+                { paddingBottom: !isPortrait ? 50 : 5 }
               ]}
             >
               {!isPortrait && isPhoto && this.renderBottomBar()}
