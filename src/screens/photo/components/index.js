@@ -62,22 +62,22 @@ export default class ImageManipulatorSample extends React.Component {
   renderBottomBar = () => (
     <View style={styles.buttomBar}>
       <TouchableOpacity onPress={() => this.rotate(90)} style={styles.button}>
-        <MaterialIcons name="rotate-right" size={50} color="black" />
+        <MaterialIcons name="rotate-right" size={30} color="black" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => this.rotate(-90)} style={styles.button}>
-        <MaterialIcons name="rotate-left" size={50} color="black" />
+        <MaterialIcons name="rotate-left" size={30} color="black" />
       </TouchableOpacity>
       <TouchableOpacity onPress={this.flip} style={styles.button}>
-        <MaterialIcons name="flip" size={50} color="black" />
+        <MaterialIcons name="flip" size={30} color="black" />
       </TouchableOpacity>
       <TouchableOpacity onPress={this.save} style={styles.button}>
-        <MaterialIcons name="save" size={50} color="black" />
+        <MaterialIcons name="save" size={30} color="black" />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => this.props.navigation.navigate("Main")}
         style={styles.button}
       >
-        <MaterialIcons name="home" size={50} color="black" />
+        <MaterialIcons name="home" size={30} color="black" />
       </TouchableOpacity>
     </View>
   );
