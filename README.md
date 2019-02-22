@@ -4,7 +4,7 @@
 
 ```
 git clone https://github.com/BaloPhilip/camera-app
-cd acamera-app
+cd camera-app
 ```
 
 2. Install the dependencies. Make sure that you use Yarn 1.0.0 or higher.
