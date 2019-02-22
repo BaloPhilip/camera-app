@@ -22,12 +22,8 @@ export const styles = StyleSheet.create({
   },
   bottomBar: {
     backgroundColor: "transparent",
-    // alignSelf: "center",
-    // justifyContent: "space-between",
-    // flex: 0.12,
-    // flexDirection: "row"
     position: "absolute",
     right: 15,
-    top: "30%"
+    top: "40%"
   }
 });

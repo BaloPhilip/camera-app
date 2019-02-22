@@ -73,6 +73,12 @@ export default class ImageManipulatorSample extends React.Component {
       <TouchableOpacity onPress={this.save} style={styles.button}>
         <MaterialIcons name="save" size={50} color="black" />
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => this.props.navigation.navigate("Main")}
+        style={styles.button}
+      >
+        <MaterialIcons name="home" size={50} color="black" />
+      </TouchableOpacity>
     </View>
   );
 

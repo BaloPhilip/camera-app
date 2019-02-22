@@ -10,7 +10,12 @@ const AppNavigator = createStackNavigator(
     Photo: { screen: Photo }
   },
   {
-    initialRouteName: "Main"
+    initialRouteName: "Main",
+    defaultNavigationOptions: {
+      headerStyle: {
+        display: "none"
+      }
+    }
   }
 );
 
