@@ -18,7 +18,8 @@
     "react": "16.8.2",
     "react-apollo": "2.4.1",
     "react-dom": "16.8.2",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^3.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
