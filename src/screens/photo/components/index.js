@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Image } from "react-native";
 import { ImageManipulator, MediaLibrary } from "expo";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { styles } from "../styles";
 
@@ -13,28 +13,33 @@ export default class ImageManipulatorSample extends React.Component {
 
   componentDidMount() {
     const image = this.props.navigation.getParam("photo", null);
-    this.setState({
-      ready: true,
-      image
-    });
+    this.setState({ ready: true, image });
   }
 
   rotate = async degree => {
-    const manipResult = await ImageManipulator.manipulateAsync(
-      this.state.image.localUri || this.state.image.uri,
+    const {
+      image: { localUri, uri }
+    } = this.state;
+
+    const image = await ImageManipulator.manipulateAsync(
+      localUri || uri,
       [{ rotate: degree }],
       { format: "jpeg" }
     );
-    this.setState({ image: manipResult });
+    this.setState({ image });
   };
 
   flip = async () => {
-    const manipResult = await ImageManipulator.manipulateAsync(
+    const {
+      image: { localUri, uri }
+    } = this.state;
+
+    const image = await ImageManipulator.manipulateAsync(
       this.state.image.localUri || this.state.image.uri,
       [{ flip: { horizontal: true } }],
       { format: "jpeg" }
     );
-    this.setState({ image: manipResult });
+    this.setState({ image });
   };
 
   save = async () => {
@@ -49,12 +54,12 @@ export default class ImageManipulatorSample extends React.Component {
   };
 
   renderImage = () => {
+    const {
+      image: { localUri, uri }
+    } = this.state;
     return (
       <View style={styles.imageWrapper}>
-        <Image
-          source={{ uri: this.state.image.localUri || this.state.image.uri }}
-          style={styles.image}
-        />
+        <Image source={{ uri: localUri || uri }} style={styles.image} />
       </View>
     );
   };
