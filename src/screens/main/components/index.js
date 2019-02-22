@@ -8,20 +8,27 @@ export default class Main extends React.Component {
     data: null
   };
 
-  componentDidMount() {
+  componentDidUpdate() {
     const data = this.props.navigation.getParam("data", null);
-    this.setState({ data });
+    if (data !== this.state.data) {
+      this.setState({ data });
+    }
   }
 
-  render() {
+  handleNavigate = () => {
     const { navigation } = this.props;
+    this.props.navigation.setParams({ data: null });
+    navigation.navigate("Camera");
+  };
+
+  render() {
     const { data } = this.state;
 
     return (
       <View style={styles.container}>
         <View>
           <TouchableOpacity
-            onPress={() => navigation.navigate("Camera")}
+            onPress={this.handleNavigate}
             style={{ alignSelf: "center" }}
           >
             <Ionicons name="md-camera" size={70} color="black" />
