@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet
-} from "react-native";
+import { Text, View, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Camera as CameraExpo,
@@ -13,6 +7,8 @@ import {
   BarCodeScanner,
   MediaLibrary
 } from "expo";
+
+import { styles } from "../styles";
 
 export default class Camera extends React.Component {
   state = {
@@ -135,35 +131,3 @@ export default class Camera extends React.Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  camera: {
-    flex: 1
-  },
-  notificationWrapper: {
-    flex: 0.2,
-    backgroundColor: "transparent"
-  },
-  notificationBody: {
-    backgroundColor: "rgba(128, 128, 128, .6)",
-    padding: 10
-  },
-  notifacationText: {
-    fontSize: 18,
-    color: "white",
-    textAlign: "center"
-  },
-  bottomBar: {
-    backgroundColor: "transparent",
-    // alignSelf: "center",
-    // justifyContent: "space-between",
-    // flex: 0.12,
-    // flexDirection: "row"
-    position: "absolute",
-    right: 0,
-    top: "50%"
-  }
-});

@@ -16,6 +16,8 @@ const AppNavigator = createStackNavigator(
 
 const AppContainer = createAppContainer(AppNavigator);
 
-const App = props => <AppContainer {...props} />;
-
-export default App;
+export default class App extends React.Component {
+  render() {
+    return <AppContainer {...this.props} />;
+  }
+}

@@ -1,3 +1,3 @@
-export { default as Main } from "./Main";
-export { default as Camera } from "./Camera";
-export { default as Photo } from "./Photo";
+export { default as Main } from "./main/components";
+export { default as Camera } from "./camera/components";
+export { default as Photo } from "./photo/components";

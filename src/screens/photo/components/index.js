@@ -1,7 +1,9 @@
 import React from "react";
-import { TouchableOpacity, View, Image, StyleSheet } from "react-native";
-import { ImageManipulator, MediaLibrary, Constants } from "expo";
+import { TouchableOpacity, View, Image } from "react-native";
+import { ImageManipulator, MediaLibrary } from "expo";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+
+import { styles } from "../styles";
 
 export default class ImageManipulatorSample extends React.Component {
   state = {
@@ -48,29 +50,17 @@ export default class ImageManipulatorSample extends React.Component {
 
   renderImage = () => {
     return (
-      <View
-        style={{
-          flex: 1
-        }}
-      >
+      <View style={styles.imageWrapper}>
         <Image
           source={{ uri: this.state.image.localUri || this.state.image.uri }}
-          style={{ flex: 1, resizeMode: "contain" }}
+          style={styles.image}
         />
       </View>
     );
   };
 
   renderBottomBar = () => (
-    <View
-      style={{
-        flex: 0.2,
-        backgroundColor: "transparent",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        paddingTop: Constants.statusBarHeight / 2
-      }}
-    >
+    <View style={styles.buttomBar}>
       <TouchableOpacity onPress={() => this.rotate(90)} style={styles.button}>
         <MaterialIcons name="rotate-right" size={50} color="black" />
       </TouchableOpacity>
@@ -88,24 +78,10 @@ export default class ImageManipulatorSample extends React.Component {
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          padding: 10
-        }}
-      >
+      <View style={styles.container}>
         {this.state.ready && this.renderImage()}
         {this.renderBottomBar()}
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  button: {
-    flex: 0.25,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
